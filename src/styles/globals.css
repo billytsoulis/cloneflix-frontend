@@ -1,0 +1,40 @@
+/* frontend/src/app/globals.css */
+
+/* Import Tailwind CSS base styles */
+@tailwind base;
+
+/* Import Tailwind CSS component styles */
+@tailwind components;
+
+/* Import Tailwind CSS utility styles */
+@tailwind utilities;
+
+/* You can add any custom global CSS here */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* Set a dark background for the entire application */
+  background-color: #1a202c; /* A dark gray/blue similar to Netflix's background */
+  color: #e2e8f0; /* Light text color */
+}
+
+/* Optional: Define a custom scrollbar for a more integrated look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2d3748; /* Darker gray for the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a5568; /* Lighter gray for the thumb */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5a6578; /* Even lighter gray on hover */
+}
