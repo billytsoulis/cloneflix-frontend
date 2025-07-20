@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google"; // Using Inter font
 import "./globals.css"; // Your global CSS file (e.g., Tailwind CSS output)
 import { Toaster } from 'react-hot-toast'; // Import Toaster from react-hot-toast
+import Navbar from '@/components/Navbar'; // Import the Navbar component
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,8 @@ export default function RootLayout({
     <html lang="en">
       {/* Apply the Inter font to the body */}
       <body className={inter.className}>
+        {/* Navbar component will appear at the top of every page */}
+        <Navbar />
         {children}
         {/* Toaster component for displaying notifications throughout the app */}
         <Toaster
@@ -37,11 +40,9 @@ export default function RootLayout({
             // Options for specific types of toasts
             success: {
               duration: 3000,
-              // 'theme' property removed as it's not directly supported here
             },
             error: {
                 duration: 5000,
-                // 'theme' property removed as it's not directly supported here
             },
           }}
         />
