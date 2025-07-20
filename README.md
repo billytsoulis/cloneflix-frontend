@@ -26,3 +26,6 @@ yarn add -D \
 npx shadcn-ui@latest init
 npx shadcn-ui@latest add button
 yarn dev
+
+---
+frontend/src/app/page.tsx
