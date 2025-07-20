@@ -95,6 +95,119 @@ export const fetchMovieRecommendations = async (userId?: number): Promise<Movie[
   }
 };
 
+export interface UserProfile {
+  id: number;
+  email: string;
+}
+
+/**
+ * Fetches the profile of the currently authenticated user from the Spring Boot service.
+ * Makes a GET request to /api/auth/profile.
+ * @returns A promise that resolves to the UserProfile object.
+ */
+export const fetchUserProfile = async (): Promise<UserProfile> => {
+  try {
+    const response = await API.get<UserProfile>("/api/auth/profile");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    throw error;
+  }
+};
+
+/**
+ * Updates the profile of the currently authenticated user with the Spring Boot service.
+ * Sends a PUT request to /api/auth/profile.
+ * @param data - An object containing fields to update (e.g., email, password).
+ * Email and password are optional as users might update only one.
+ * @returns A promise that resolves to the Axios response.
+ */
+export const updateUserProfile = async (data: { email?: string; password?: string }) => {
+  try {
+    const response = await API.put("/api/auth/profile", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
+};
+
+// Defines the TypeScript interface for a WatchlistItem object, matching the Spring Boot WatchlistItem model.
+export interface WatchlistItem {
+  id: number; // ID of the watchlist item itself
+  movieId: number; // ID of the movie (from FastAPI)
+  movieTitle: string;
+  movieGenre: string;
+  addedAt: string; // ISO 8601 string for LocalDateTime
+}
+
+/**
+ * Adds a movie to the authenticated user's watchlist.
+ * Sends a POST request to /api/watchlist/add.
+ * @param movieId - The ID of the movie to add.
+ * @param movieTitle - The title of the movie.
+ * @param movieGenre - The genre of the movie.
+ * @returns A promise that resolves to the added WatchlistItem object.
+ */
+export const addMovieToWatchlist = async (movieId: number, movieTitle: string, movieGenre: string): Promise<WatchlistItem> => {
+  try {
+    const response = await API.post<WatchlistItem>("/api/watchlist/add", { movieId, movieTitle, movieGenre });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding movie to watchlist:", error);
+    throw error;
+  }
+};
+
+/**
+ * Removes a movie from the authenticated user's watchlist.
+ * Sends a DELETE request to /api/watchlist/remove.
+ * @param movieId - The ID of the movie to remove.
+ * @returns A promise that resolves to the API response (success message).
+ */
+export const removeMovieFromWatchlist = async (movieId: number) => {
+  try {
+    const response = await API.delete("/api/watchlist/remove", { data: { movieId } }); // DELETE with body
+    return response.data;
+  } catch (error) {
+    console.error("Error removing movie from watchlist:", error);
+    throw error;
+  }
+};
+
+/**
+ * Fetches all watchlist items for the authenticated user.
+ * Sends a GET request to /api/watchlist/.
+ * @returns A promise that resolves to a list of WatchlistItem objects.
+ */
+export const fetchWatchlist = async (): Promise<WatchlistItem[]> => {
+  try {
+    const response = await API.get<WatchlistItem[]>("/api/watchlist/");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching watchlist:", error);
+    throw error;
+  }
+};
+
+/**
+ * Checks if a specific movie is in the authenticated user's watchlist.
+ * Sends a GET request to /api/watchlist/check/{movieId}.
+ * @param movieId - The ID of the movie to check.
+ * @returns A promise that resolves to a boolean indicating if the movie is in the watchlist.
+ */
+export const checkMovieInWatchlist = async (movieId: number): Promise<boolean> => {
+  try {
+    const response = await API.get<boolean>(`/api/watchlist/check/${movieId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error checking movie ID ${movieId} in watchlist:`, error);
+    // If there's an error (e.g., 404 if user not found, or other network issues),
+    // assume it's not in the watchlist for UI purposes, or re-throw if critical.
+    return false; // Or throw error;
+  }
+};
+
 // You can add an interceptor here to automatically handle common errors,
 // e.g., redirecting to login if a 401 Unauthorized is received for non-auth endpoints.
 // API.interceptors.response.use(
