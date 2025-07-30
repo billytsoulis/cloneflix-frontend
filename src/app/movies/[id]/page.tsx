@@ -8,6 +8,7 @@ import { fetchAllMovies, Movie, addMovieToWatchlist, removeMovieFromWatchlist, c
 import toast from 'react-hot-toast'; // For notifications
 import Link from 'next/link'; // Import Link for navigation
 import { Heart, HeartCrack } from 'lucide-react'; // Import icons for watchlist
+import SimilarMoviesSection from '@/components/SimilarMoviesSection'; // New: Import SimilarMoviesSection
 
 interface MovieDetailsPageProps {
   params: Promise<{
@@ -179,6 +180,15 @@ export default function MovieDetailsPage({ params: paramsPromise }: MovieDetails
             </p>
           )}
         </div>
+
+        {/* New: Similar Movies Section */}
+        {movie.genre && ( // Only render if movie genre is available
+          <SimilarMoviesSection
+            genre={movie.genre}
+            currentMovieId={movie.id}
+            title={`More like "${movie.title}"`} // Catchy title
+          />
+        )}
       </div>
     </div>
   );
