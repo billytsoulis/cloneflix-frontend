@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import mongoose from 'mongoose';
+import { isAuthenticated } from '@/lib/auth'; // Import the new authentication utility
 
 // Define the cached connection object
 // This is a crucial optimization for Next.js API routes to prevent
@@ -41,6 +42,11 @@ async function connectToDatabase() {
 
 // Define the Mongoose schema for a Movie
 const movieSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
   title: {
     type: String,
     required: true,
@@ -55,15 +61,12 @@ const movieSchema = new mongoose.Schema({
   },
   director: {
     type: String,
-    required: true,
   },
   rating: {
     type: Number,
-    required: true,
   },
   description: {
     type: String,
-    required: true,
   },
 });
 
@@ -71,7 +74,14 @@ const movieSchema = new mongoose.Schema({
 const Movie = mongoose.models.Movie || mongoose.model('Movie', movieSchema, 'movies');
 
 // The GET handler for the API route
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // First, check if the user is authenticated
+  const authenticated = await isAuthenticated(request);
+  if (!authenticated) {
+    console.log('GET /api/movies: Unauthorized access attempt.');
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     // 1. Connect to the MongoDB database
     await connectToDatabase();
